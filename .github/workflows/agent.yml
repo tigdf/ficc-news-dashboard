@@ -1,0 +1,50 @@
+# .github/workflows/agent.yml
+# Runs the market intelligence pipeline twice daily.
+# Commits the generated digest JSON back to the repo,
+# which triggers a Vercel redeploy of the dashboard.
+
+name: Market Intelligence Agent
+
+on:
+  schedule:
+    # 6:00 AM AEST = 20:00 UTC (runs day before in UTC)
+    - cron: '0 20 * * *'
+    # 6:00 PM AEST = 08:00 UTC
+    - cron: '0 8 * * *'
+  # Allow manual trigger from GitHub Actions UI
+  workflow_dispatch:
+
+jobs:
+  run-agent:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write   # needed to commit digest back to repo
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run market intelligence pipeline
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: node src/index.js
+
+      - name: Copy digest to dashboard/public
+        run: node scripts/prepare-dashboard.js
+
+      - name: Commit updated digest
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "Market Intelligence Agent"
+          git add data/digests/ dashboard/public/latest.json
+          git diff --staged --quiet || git commit -m "digest: $(date +'%Y-%m-%d %H:%M UTC')"
+          git push

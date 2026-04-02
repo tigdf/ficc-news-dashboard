@@ -1,0 +1,11 @@
+{
+  "meta": {
+    "generatedAt": "2026-01-01T00:00:00.000Z",
+    "runLabel": "N/A",
+    "articlesAnalysed": 0,
+    "opportunitiesFound": 0,
+    "stats": { "high": 0, "medium": 0, "low": 0, "total": 0, "byAssetClass": { "Equity": 0, "Fixed Income": 0, "Currency": 0, "Commodities": 0 } }
+  },
+  "articles": [],
+  "opportunities": []
+}
