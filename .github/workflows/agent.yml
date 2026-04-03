@@ -6,12 +6,14 @@
 name: Market Intelligence Agent
 
 on:
-  schedule:
-    # 6:00 AM AEST = 20:00 UTC (runs day before in UTC)
-    - cron: '0 20 * * *'
-    # 6:00 PM AEST = 08:00 UTC
-    - cron: '0 8 * * *'
-  # Allow manual trigger from GitHub Actions UI
+  # Disabled — uncomment to re-enable
+  # schedule:
+  #   # 6:00 AM AEST = 20:00 UTC (runs day before in UTC)
+  #   - cron: '0 20 * * *'
+  #   # 6:00 PM AEST = 08:00 UTC
+  #   - cron: '0 8 * * *'
+  # workflow_dispatch:
+  # Placeholder to keep YAML valid while disabled
   workflow_dispatch:
 
 jobs:
